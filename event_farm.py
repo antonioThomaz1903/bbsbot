@@ -76,35 +76,36 @@ def main():
     print("\nBot iniciado. CTRL+C para parar.\n")
 
     with mss.MSS() as sct:
-        estado = "INICIO"
+        estado = "START_QUEST"
 
         while True:
 
             tela = capturar_tela(sct)
 
             if estado == "INICIO":
+                print("PREPARE FOR QUEST")
                 time.sleep(0.5)
                 encontrado = procurar_imagem(tela, ASSETS / "botoes" / "prepare_button.png")
 
                 if encontrado:
                     x, y, confianca = encontrado
                     pyautogui.click(x, y)
-                    estado = "ESPERANDO_CONFIRMAR"
+                    estado = "START_QUEST"
 
-            elif estado == "ESPERANDO_CONFIRMAR":
-
+            if estado == "START_QUEST":
+                print("START QUEST")
                 encontrado = procurar_imagem(
                     tela,
-                    ASSETS / "botoes" / "epic_raid_start_quest_5_button.png"
+                    ASSETS / "botoes" / "start_quest.png"
                 )
 
                 if encontrado:
                     time.sleep(2.5)
                     x, y, confianca = encontrado
                     pyautogui.click(x, y)
-                    estado = "ESPERANDO_FINALIZAR"
+                    estado = "FINALIZAR QUEST"
 
-            elif estado == "ESPERANDO_FINALIZAR":
+            elif estado == "FINALIZAR QUEST":
 
                 encontrado = procurar_imagem(
                     tela,
@@ -119,18 +120,31 @@ def main():
                     pyautogui.click(x, y)
                     estado = "ESPERANDO_RETRY"
 
-            elif estado == "ESPERANDO_RETRY":
 
+            elif estado == "ESPERANDO_RETRY":
+                print("ESPERANDO RETRY")
+                time.sleep(3)
                 encontrado = procurar_imagem(
                     tela,
-                    ASSETS / "botoes" / "retry_button.png"
+                    ASSETS / "botoes" / "event_retry.png"
                 )
+
+                encontrado_close = procurar_imagem(
+                    tela,
+                    ASSETS / "botoes" / "close.png"
+                )
+
                 if encontrado:
                     time.sleep(0.5)
                     x, y, confianca = encontrado
                     pyautogui.click(x, y)
-                    estado = "INICIO"
+                    estado = "START_QUEST"
 
+                if encontrado_close:
+                    time.sleep(0.5)
+                    x, y, confianca = encontrado_close
+                    pyautogui.click(x, y)
+                    time.sleep(1)
 
 if __name__ == "__main__":
     main()
